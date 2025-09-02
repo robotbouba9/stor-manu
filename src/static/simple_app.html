@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة مخزون محل الهواتف</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .sidebar { min-height: 100vh; }
+        .content { min-height: 100vh; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="sidebar w-64 bg-blue-800 text-white p-4">
+            <h1 class="text-xl font-bold mb-6">نظام إدارة المخزون</h1>
+            <nav>
+                <ul class="space-y-2">
+                    <li><a href="#dashboard" class="block p-2 rounded hover:bg-blue-700 nav-link" data-page="dashboard">لوحة التحكم</a></li>
+                    <li><a href="#products" class="block p-2 rounded hover:bg-blue-700 nav-link" data-page="products">المنتجات</a></li>
+                    <li><a href="#categories" class="block p-2 rounded hover:bg-blue-700 nav-link" data-page="categories">الفئات</a></li>
+                    <li><a href="#customers" class="block p-2 rounded hover:bg-blue-700 nav-link" data-page="customers">العملاء</a></li>
+                    <li><a href="#suppliers" class="block p-2 rounded hover:bg-blue-700 nav-link" data-page="suppliers">الموردين</a></li>
+                    <li><a href="#sales" class="block p-2 rounded hover:bg-blue-700 nav-link" data-page="sales">المبيعات</a></li>
+                    <li><a href="#reports" class="block p-2 rounded hover:bg-blue-700 nav-link" data-page="reports">التقارير</a></li>
+                    <li><a href="#settings" class="block p-2 rounded hover:bg-blue-700 nav-link" data-page="settings">الإعدادات</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content flex-1 p-6">
+            <div id="page-content">
+                <!-- Dashboard Page -->
+                <div id="dashboard-page" class="page">
+                    <h2 class="text-2xl font-bold mb-6">لوحة التحكم</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-semibold text-gray-700">إجمالي المنتجات</h3>
+                            <p class="text-3xl font-bold text-blue-600" id="total-products">0</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-semibold text-gray-700">المنتجات المنخفضة</h3>
+                            <p class="text-3xl font-bold text-red-600" id="low-stock-products">0</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-semibold text-gray-700">إجمالي العملاء</h3>
+                            <p class="text-3xl font-bold text-green-600" id="total-customers">0</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-semibold text-gray-700">مبيعات اليوم</h3>
+                            <p class="text-3xl font-bold text-purple-600" id="today-sales">0 ريال</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Page -->
+                <div id="products-page" class="page hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">إدارة المنتجات</h2>
+                        <button id="add-product-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">إضافة منتج جديد</button>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="mb-4">
+                            <input type="text" id="product-search" placeholder="البحث في المنتجات..." class="w-full p-2 border rounded">
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full table-auto">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="p-2 text-right">الاسم</th>
+                                        <th class="p-2 text-right">الماركة</th>
+                                        <th class="p-2 text-right">السعر</th>
+                                        <th class="p-2 text-right">الكمية</th>
+                                        <th class="p-2 text-right">الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products-table">
+                                    <!-- Products will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Page -->
+                <div id="categories-page" class="page hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">إدارة الفئات</h2>
+                        <button id="add-category-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">إضافة فئة جديدة</button>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="overflow-x-auto">
+                            <table class="w-full table-auto">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="p-2 text-right">اسم الفئة</th>
+                                        <th class="p-2 text-right">عدد المنتجات</th>
+                                        <th class="p-2 text-right">الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categories-table">
+                                    <!-- Categories will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other pages will be similar -->
+                <div id="customers-page" class="page hidden">
+                    <h2 class="text-2xl font-bold mb-6">إدارة العملاء</h2>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p>صفحة العملاء قيد التطوير...</p>
+                    </div>
+                </div>
+
+                <div id="suppliers-page" class="page hidden">
+                    <h2 class="text-2xl font-bold mb-6">إدارة الموردين</h2>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p>صفحة الموردين قيد التطوير...</p>
+                    </div>
+                </div>
+
+                <div id="sales-page" class="page hidden">
+                    <h2 class="text-2xl font-bold mb-6">إدارة المبيعات</h2>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p>صفحة المبيعات قيد التطوير...</p>
+                    </div>
+                </div>
+
+                <div id="reports-page" class="page hidden">
+                    <h2 class="text-2xl font-bold mb-6">التقارير</h2>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p>صفحة التقارير قيد التطوير...</p>
+                    </div>
+                </div>
+
+                <div id="settings-page" class="page hidden">
+                    <h2 class="text-2xl font-bold mb-6">الإعدادات</h2>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <button id="init-settings-btn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-4">تهيئة الإعدادات الافتراضية</button>
+                        <div id="settings-content">
+                            <!-- Settings will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding products -->
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white p-6 rounded-lg w-96">
+                <h3 class="text-lg font-bold mb-4">إضافة منتج جديد</h3>
+                <form id="product-form">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">اسم المنتج</label>
+                        <input type="text" id="product-name" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">الوصف</label>
+                        <textarea id="product-description" class="w-full p-2 border rounded"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">السعر</label>
+                        <input type="number" id="product-price" class="w-full p-2 border rounded" step="0.01" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">الكمية</label>
+                        <input type="number" id="product-quantity" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">الماركة</label>
+                        <input type="text" id="product-brand" class="w-full p-2 border rounded">
+                    </div>
+                    <div class="flex justify-end space-x-2">
+                        <button type="button" id="cancel-product" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">إلغاء</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">حفظ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = e.target.dataset.page;
+                showPage(page);
+            });
+        });
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(pageId + '-page').classList.remove('hidden');
+            
+            // Load page data
+            if (pageId === 'dashboard') {
+                loadDashboard();
+            } else if (pageId === 'products') {
+                loadProducts();
+            } else if (pageId === 'categories') {
+                loadCategories();
+            } else if (pageId === 'settings') {
+                loadSettings();
+            }
+        }
+
+        // API functions
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            };
+            
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+            
+            try {
+                const response = await fetch(`/api${endpoint}`, options);
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                return { error: 'خطأ في الاتصال بالخادم' };
+            }
+        }
+
+        // Dashboard functions
+        async function loadDashboard() {
+            try {
+                const [products, customers] = await Promise.all([
+                    apiCall('/products'),
+                    apiCall('/customers')
+                ]);
+                
+                document.getElementById('total-products').textContent = products.products?.length || 0;
+                document.getElementById('total-customers').textContent = customers.customers?.length || 0;
+                
+                if (products.products) {
+                    const lowStock = products.products.filter(p => p.is_low_stock).length;
+                    document.getElementById('low-stock-products').textContent = lowStock;
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        // Products functions
+        async function loadProducts() {
+            try {
+                const response = await apiCall('/products');
+                const tbody = document.getElementById('products-table');
+                tbody.innerHTML = '';
+                
+                if (response.products) {
+                    response.products.forEach(product => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="p-2">${product.name}</td>
+                            <td class="p-2">${product.brand || '-'}</td>
+                            <td class="p-2">${product.price} ريال</td>
+                            <td class="p-2 ${product.is_low_stock ? 'text-red-600' : ''}">${product.quantity}</td>
+                            <td class="p-2">
+                                <button class="text-blue-600 hover:underline mr-2">تعديل</button>
+                                <button class="text-red-600 hover:underline">حذف</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        // Categories functions
+        async function loadCategories() {
+            try {
+                const response = await apiCall('/categories');
+                const tbody = document.getElementById('categories-table');
+                tbody.innerHTML = '';
+                
+                if (response.categories) {
+                    response.categories.forEach(category => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="p-2">${category.name}</td>
+                            <td class="p-2">${category.products_count}</td>
+                            <td class="p-2">
+                                <button class="text-blue-600 hover:underline mr-2">تعديل</button>
+                                <button class="text-red-600 hover:underline">حذف</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        // Settings functions
+        async function loadSettings() {
+            try {
+                const response = await apiCall('/settings');
+                const content = document.getElementById('settings-content');
+                content.innerHTML = '';
+                
+                if (response.settings) {
+                    Object.entries(response.settings).forEach(([key, setting]) => {
+                        const div = document.createElement('div');
+                        div.className = 'mb-4';
+                        div.innerHTML = `
+                            <label class="block text-sm font-medium mb-2">${setting.description || key}</label>
+                            <input type="text" value="${setting.value}" class="w-full p-2 border rounded" data-key="${key}">
+                        `;
+                        content.appendChild(div);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+        }
+
+        // Modal functions
+        document.getElementById('add-product-btn').addEventListener('click', () => {
+            document.getElementById('product-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('cancel-product').addEventListener('click', () => {
+            document.getElementById('product-modal').classList.add('hidden');
+        });
+
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const productData = {
+                name: document.getElementById('product-name').value,
+                description: document.getElementById('product-description').value,
+                price: parseFloat(document.getElementById('product-price').value),
+                quantity: parseInt(document.getElementById('product-quantity').value),
+                brand: document.getElementById('product-brand').value
+            };
+            
+            try {
+                const response = await apiCall('/products', 'POST', productData);
+                if (response.message) {
+                    alert(response.message);
+                    document.getElementById('product-modal').classList.add('hidden');
+                    document.getElementById('product-form').reset();
+                    loadProducts();
+                } else if (response.error) {
+                    alert(response.error);
+                }
+            } catch (error) {
+                alert('خطأ في إضافة المنتج');
+            }
+        });
+
+        // Initialize settings
+        document.getElementById('init-settings-btn').addEventListener('click', async () => {
+            try {
+                const response = await apiCall('/settings/initialize', 'POST');
+                if (response.message) {
+                    alert(response.message);
+                    loadSettings();
+                } else if (response.error) {
+                    alert(response.error);
+                }
+            } catch (error) {
+                alert('خطأ في تهيئة الإعدادات');
+            }
+        });
+
+        // Load dashboard on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+        });
+    </script>
+</body>
+</html>
+
