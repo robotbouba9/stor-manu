@@ -1,0 +1,22 @@
+services:
+  # خدمة الويب (التطبيق)
+  - type: web
+    name: phone-store-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn src.main:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+    
+  # قاعدة البيانات PostgreSQL
+  - type: pserv
+    name: phone-store-db
+    env: postgresql
+    plan: free
+    ipAllowList: []
+
